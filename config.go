@@ -16,10 +16,11 @@ const (
 type APIType string
 
 const (
-	APITypeOpenAI          APIType = "OPEN_AI"
-	APITypeAzure           APIType = "AZURE"
-	APITypeAzureAD         APIType = "AZURE_AD"
-	APITypeCloudflareAzure APIType = "CLOUDFLARE_AZURE"
+	APITypeOpenAI           APIType = "OPEN_AI"
+	APITypeAzure            APIType = "AZURE"
+	APITypeAzureAD          APIType = "AZURE_AD"
+	APITypeCloudflareAzure  APIType = "CLOUDFLARE_AZURE"
+	APITypeAbstractProvider APIType = "ABSTRACT_PROVIDER"
 )
 
 const AzureAPIKeyHeader = "api-key"
@@ -32,7 +33,7 @@ type HTTPDoer interface {
 
 // ClientConfig is a configuration of a client.
 type ClientConfig struct {
-	authToken string
+	Authtoken string
 
 	BaseURL              string
 	OrgID                string
@@ -47,7 +48,7 @@ type ClientConfig struct {
 
 func DefaultConfig(authToken string) ClientConfig {
 	return ClientConfig{
-		authToken:        authToken,
+		Authtoken:        authToken,
 		BaseURL:          openaiAPIURLv1,
 		APIType:          APITypeOpenAI,
 		AssistantVersion: defaultAssistantVersion,
@@ -59,9 +60,23 @@ func DefaultConfig(authToken string) ClientConfig {
 	}
 }
 
+func ConfigWithCustomHttpClient(baseUrl, authToken string, httpClient *http.Client) ClientConfig {
+	return ClientConfig{
+		Authtoken:        authToken,
+		BaseURL:          baseUrl,
+		APIType:          APITypeAbstractProvider,
+		AssistantVersion: defaultAssistantVersion,
+		OrgID:            "",
+
+		HTTPClient: httpClient,
+
+		EmptyMessagesLimit: defaultEmptyMessagesLimit,
+	}
+}
+
 func DefaultAzureConfig(apiKey, baseURL string) ClientConfig {
 	return ClientConfig{
-		authToken:  apiKey,
+		Authtoken:  apiKey,
 		BaseURL:    baseURL,
 		OrgID:      "",
 		APIType:    APITypeAzure,

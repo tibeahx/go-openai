@@ -25,13 +25,13 @@ func (*failingRequestBuilder) Build(_ context.Context, _, _ string, _ any, _ htt
 func TestClient(t *testing.T) {
 	const mockToken = "mock token"
 	client := NewClient(mockToken)
-	if client.config.authToken != mockToken {
+	if client.config.Authtoken != mockToken {
 		t.Errorf("Client does not contain proper token")
 	}
 
 	const mockOrg = "mock org"
 	client = NewOrgClient(mockToken, mockOrg)
-	if client.config.authToken != mockToken {
+	if client.config.Authtoken != mockToken {
 		t.Errorf("Client does not contain proper token")
 	}
 	if client.config.OrgID != mockOrg {
